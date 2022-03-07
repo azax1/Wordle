@@ -33,12 +33,13 @@ public class Wordle {
 			line = line.replace('_', '5');
 			
 			char c = line.charAt(0);
-			String[] params = line.substring(1).split(", ");
-			if (params.length == 1) {
+			String[] params = line.substring(1).split(",");
+			if (line.length() == 1) {
 				LetterInfo info = new LetterInfo(1, primes[0], 0, true);
 				godelData.put(c, info);
 				continue;
 			}
+			params = padAndTrim(params);
 			
 			int green = 1;
 			for (String num : params[0].split(" ")) {
@@ -62,6 +63,9 @@ public class Wordle {
 				}
 			}
 			int min = Integer.parseInt(params[3]);
+			if (min == 5) {
+				min = 1;
+			}
 			LetterInfo info = new LetterInfo(green, orangeAndGray, min, excess);
 			godelData.put(c, info);
 		}
@@ -127,5 +131,26 @@ public class Wordle {
 			}
 		}
 		return count;
+	}
+	
+	private static String[] padAndTrim(String[] data) {
+		String[] ret;
+		if (data.length == 4) {
+			ret = data;
+		} else {
+			ret = new String[4];
+			int i;
+			for (i = 0; i < data.length; i++) {
+				ret[i] = data[i];
+			}
+			for (; i < 3; i++) {
+				ret[i] = "5";
+			}
+			ret[3] = "1";
+		}
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = ret[i].trim();
+		}
+		return ret;
 	}
 }
